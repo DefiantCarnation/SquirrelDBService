@@ -54,12 +54,17 @@ module.exports = {
       console.log('could not get Links from database: db error');
     });
   },
+  //getUser Friends Links.. limit 10? //
+  getFriendsLinks: function(req, res, next) {
+    //TODO TODO!!!!!
+  },
   // add link to user // 
   putLinks: function(req, res, next){
     var userID = req.params.userid;
 
     Link.create({url: req.body.url, owner: userID, assignee: userID})
       .then(function(link){
+        console.log(link);
         console.log('new link saved in putLinks');
         res.sendStatus(201);
         //should we be sending back the link to user for any reason? 
@@ -93,6 +98,25 @@ module.exports = {
     })
   },
   //get list of user's friends
+  // friendsGet: function(req, res, next){
+  //   var userID = req.params.userid;
+  //   //Below is how you access the 'friendship' table created by sequelize
+  //   User.find({
+  //     where:{fbid: userID},
+  //     include:[{model: User, as: 'friend'}],
+  //   })
+  //   .then(function(data){
+  //     var mappedFriends = data.friend.map(function(friend){
+  //       return {fbid:friend.fbid, fbname:friend.fbname};
+  //     })
+  //     res.send({
+  //       friends:mappedFriends
+  //     });
+  //   })
+  //   .catch(function(err){
+  //     console.log('could not get friends from db. DB error');
+  //   })
+  // },
   friendsGet: function(req, res, next){
     var userID = req.params.userid;
     //Below is how you access the 'friendship' table created by sequelize
@@ -104,9 +128,33 @@ module.exports = {
       var mappedFriends = data.friend.map(function(friend){
         return {fbid:friend.fbid, fbname:friend.fbname};
       })
-      res.send({
-        friends:mappedFriends
-      });
+      console.log(mappedFriends, 'mappedFriends Yolo')
+      return mappedFriends;
+    })
+    .then(function(friendsArray){
+      console.log(friendsArray, 'friendsArray Yolo')
+      var promiseArray = [];
+      friendsArray.forEach(function(friend){
+        var updatedFriend = friend;
+        console.log(friend.fbid, 'friend.fbid');
+        var promise = new Promise(function(resolve,reject){
+          Link.findAll({
+            where: {owner: friend.fbid}
+          })
+          .then(function(links){
+              updatedFriend.links = links;
+            resolve(updatedFriend);
+          })
+        })
+
+        promiseArray.push(promise);
+      })
+
+      Promise.all(promiseArray)
+      .then((values)=> {
+        console.log(values, 'please for the love of god work!')
+        res.send(values);
+      })
     })
     .catch(function(err){
       console.log('could not get friends from db. DB error');

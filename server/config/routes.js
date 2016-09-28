@@ -8,6 +8,8 @@ module.exports = function(app){
 
   app.get('/links/:userid', helpers.getLinks);
 
+  app.get('/links/friends/:friendid', helpers.getFriendsLinks);
+
   app.put('/links/:userid', helpers.putLinks);
 
   app.delete('/links/:userid', helpers.deleteLinks);
@@ -15,6 +17,6 @@ module.exports = function(app){
   app.get('/friends/:userid', helpers.friendsGet);
 
   app.put('/friends/:userid', helpers.friendsPut);
-
+  //may need to modify endpoint below.. may just route to app.put/links?
   app.put('/links/:friendid/:userid', helpers.putLinksFriend);
 }
