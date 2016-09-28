@@ -112,6 +112,7 @@ module.exports = {
     })
     .then(function(friendsArray){
       var promiseArray = [];
+      // create promises for each friend and push into promiseArray
       friendsArray.forEach(function(friend){
         var updatedFriend = friend;
         var promise = new Promise(function(resolve,reject){
@@ -126,8 +127,9 @@ module.exports = {
 
         promiseArray.push(promise);
       })
-
+      //wait for all promises in promiseArray to resolve
       Promise.all(promiseArray)
+      //values below should be array of friends with links
       .then((values)=> {
         res.send(values);
       })
