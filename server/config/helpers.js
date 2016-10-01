@@ -39,16 +39,38 @@ module.exports = {
 
   // user request API // 
   getLinks: function(req, res, next){
-    var userID = req.params.userid;
+    const userID = req.params.userid;
+    const promises = [];
 
     Link.findAll({where:{
       owner: userID,
     }})
     .then(function(data){
-      var mapped = data.map(function(curr){
+      console.log('please work', data)
+      const mapped = data.map(function(curr){
         return curr.dataValues;
       });
-      res.send(mapped);
+      return mapped;
+    })
+    .then((data) => {
+      const addPromise = function(id){
+        return new Promise((res, rej) => {
+          User.findById(id)
+          .then((user)=>{
+            res(user);
+          })
+        })
+      }
+      data.forEach((curr2) => {
+        if(curr2.assignee !== userID){
+          promises.push(addPromise(curr2.assignee))
+        }
+      });
+      Promise.all(promises)
+      .then((user) => {
+        console.log('data?', data, 'user?', user);
+        res.send(data);
+      })
     })
     .catch(function(err){
       console.log('could not get Links from database: db error');
@@ -161,6 +183,7 @@ module.exports = {
 
   //put new link into friends folder
   putLinksFriend: function(req, res, next){
+    console.log('adding link to friend');
     var userID = req.params.userid;
     var friendID = req.params.friendid;
     var url = req.body.link;
