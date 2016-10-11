@@ -8,10 +8,15 @@ var Tag = require('../../db/db-config').Tag;
 module.exports = {
   // test route for Postman and Mocha TDD
   test: function(req, res, next){
-
-    res.sendStatus(200);
+    console.log('TEST')
+    res.end("TESTED");
   },
-
+  posttest: function(req,res,next){
+    console.log('params',req.params);
+    console.log('data',req.data);
+    console.log('body',req.body)
+    res.send('GOT HERE');
+  },
   signup: function(req, res, next) {
     console.log(req.body, 'req body here');
     const username = req.body.username;
@@ -306,6 +311,12 @@ module.exports = {
     .then((data)=>{
       res.send(data);
     })
+  },
+  test:function(req,res,next){
+    console.log('query',req.query)
+    console.log('body',req.body);
+    console.log('params',req.params);
+    res.end('Reached test',req.body);
   },
 
   //add Like for specific link. (One user can like a specific Link ID ONCE ONLY)

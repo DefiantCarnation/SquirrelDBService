@@ -2,7 +2,11 @@ var helpers = require('./helpers');
 
 module.exports = function(app){
 
-  app.get('/test', helpers.test);
+  app.get('/test/:first', helpers.test);
+
+  app.post('/posttest',helpers.posttest);
+
+  app.post('/test',helpers.posttest);
 
   app.post('/signup', helpers.signup);
 
@@ -31,5 +35,7 @@ module.exports = function(app){
   app.get('/search/:friend', helpers.searchFriends);
 
   app.put('/likes', helpers.putLike);
+
+  app.get('/test',helpers.test)
 
 }
