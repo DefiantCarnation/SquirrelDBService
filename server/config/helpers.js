@@ -5,13 +5,14 @@ require('../../db/db-config')
 // var Like = require('../../db/db-config').Like;
 // var Tag = require('../../db/db-config').Tag;
 
+console.log('HERE');
 console.log('CURRENTDB',global.currentdb);
 
-var Link = global.currentdb.Link;
-var User = global.currentdb.User;
-var Category = global.currentdb.Category;
-var Like = global.currentdb.Like;
-var Tag = global.currentdb.Tag;
+global.Link = global.currentdb.Link;
+global.User = global.currentdb.User;
+global.Category = global.currentdb.Category;
+global.Like = global.currentdb.Like;
+global.Tag = global.currentdb.Tag;
 
 module.exports = {
   // test route for Postman and Mocha TDD
@@ -26,16 +27,19 @@ module.exports = {
     res.send('GOT HERE');
   },
   signup: function(req, res, next) {
+    // console.log('SIGNED UP');
+    // console.log('prKeys',User.primaryKeys);
+    // console.log('attr',User.attributes);
     console.log(req.body, 'req body here');
     const username = req.body.username;
     const password = req.body.password;
 
-    User.findById(username)
+    global.User.findById(username)
     .then(function(user){
       if(user) {
         res.send(404);
       } else {
-        User.create({fbid: username, fbname: password})
+        global.User.create({fbid: username, fbname: password})
         .then(function(user){
           res.send(user); //<=== working here
         })
@@ -50,12 +54,12 @@ module.exports = {
     const userName = req.body.password; //isthis now the unique password? 
     const avatar = req.body.avatar;
     
-    User.findById(userID)
+    global.User.findById(userID)
       .then(function(user){
         if(user){
           res.send(user);
         } else {
-          User.create({fbid: userID, fbname: userName, avatar: avatar})
+          global.User.create({fbid: userID, fbname: userName, avatar: avatar})
             .then(function(user){
               res.send(user); //<=== working here
             })
@@ -70,7 +74,7 @@ module.exports = {
     const username = req.body.username;
     const password = req.body.password;
 
-    User.findById(username)
+    global.User.findById(username)
     .then(function(user){
       if(user && user.fbname === password) {
         res.send(user);
@@ -83,7 +87,7 @@ module.exports = {
   deserialize: function(req, res, next) {
     var userID = req.body.username;
 
-    User.findById(userID)
+    global.User.findById(userID)
       .then(function(user){
         if(user){
           res.send(user);
@@ -100,7 +104,7 @@ module.exports = {
     const userID = req.params.userid;
     const promises = [];
 
-    Link.findAll({where:{owner: userID,},
+    global.Link.findAll({where:{owner: userID,},
       // order: [['createdAt', 'DESC']],
     })
     .then(function(data){
@@ -113,7 +117,7 @@ module.exports = {
     .then((data) => {
       const addPromise = function(id){
         return new Promise((res, rej) => {
-          User.findById(id)
+          global.User.findById(id)
           .then((user)=>{
             if(user){
               const userObj = {[user.fbid]: user.fbname, avatar: user.avatar}
@@ -160,7 +164,7 @@ module.exports = {
   getFriendsLinks: function(req, res, next) {
     var friendID = req.params.friendid;
 
-    Link.findAll({
+    global.Link.findAll({
       where: {
         owner: friendID,
         assignee: friendID,
@@ -178,7 +182,7 @@ module.exports = {
 
     var userID = req.params.userid;
 
-    Link.create({url: req.body.url, owner: userID, assignee: userID})
+    global.Link.create({url: req.body.url, owner: userID, assignee: userID})
       .then(function(link){
 
 
@@ -193,7 +197,7 @@ module.exports = {
   deleteLinks: function(req, res, next){
     var userID = req.params.userid;
     //make sure we only delete the instance where owner AND assignee are the same
-    Link.findAll({
+    global.Link.findAll({
       where: {
       url: req.body.url,
       owner: userID,
@@ -217,7 +221,7 @@ module.exports = {
   friendsGet: function(req, res, next){
     var userID = req.params.userid;
     //Below is how you access the 'friendship' table created by sequelize
-    User.find({
+    global.User.find({
       where:{fbid: userID},
       include:[{model: User, as: 'friend'}],
     })
@@ -236,7 +240,7 @@ module.exports = {
         var updatedFriend = friend;
 
         var promise = new Promise(function(resolve,reject){
-          Link.findAll({
+          global.Link.findAll({
             where: {owner: friend.fbid, assignee: friend.fbid}
           })
           .then(function(links){
@@ -264,7 +268,7 @@ module.exports = {
   friendsGetNameOnly: function(req, res, next) {
     var userID = req.params.userid;
     
-    User.find({
+    global.User.find({
       where:{fbid: userID},
       include:[{model: User, as: 'friend'}],
     })
@@ -277,11 +281,11 @@ module.exports = {
     var userID = req.params.userid;
     var friendID = req.body.friend;
     
-    User.findOne({
+    global.User.findOne({
       where:{fbid: userID}
     })
     .then(function(user){
-      User.findOne({
+      global.User.findOne({
         where:{fbid: friendID}
       })
       .then(function(friend){
@@ -300,7 +304,7 @@ module.exports = {
     var friendID = req.params.friendid;
     var url = req.body.link;
 
-    Link.create({url:url, owner:friendID, assignee:userID})
+    global.Link.create({url:url, owner:friendID, assignee:userID})
     .then(function(link){
 
       res.send(link).sendStatus(201);
@@ -311,7 +315,7 @@ module.exports = {
   searchFriends: function(req, res, next) {
     var search = req.params.friend;
 
-    User.findAll({
+    global.User.findAll({
       where: {
         fbname: search
       }
@@ -333,14 +337,14 @@ module.exports = {
     var likedLink = req.body.url;
     var linkOwner = req.body.owner
   
-    Link.findOne({
+    global.Link.findOne({
       where: {
         url: likedLink,
         owner: linkOwner,
       }
       })
       .then(function(link){
-        Like.findOne({
+        global.Like.findOne({
           where: {
             linkId: link.dataValues.id,
             userFbid: likedBy,
@@ -348,7 +352,7 @@ module.exports = {
         })
         .then(function(like){
           if(like === null) {
-            Like.create()
+            global.Like.create()
             .then(function(newLike){
               newLike.setLink(link.dataValues.id);
               newLike.setUser(likedBy);

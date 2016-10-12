@@ -20,9 +20,9 @@ db.authenticate()
 .then(function(){
   console.log('connected to db');
 
-  User.findOne({
+  global.User.findOne({
     where: {
-      fbname: 'FAKEPASSWORD'
+      fbname: 'FAKEPASSWORDSM'
     }
   })
   .then(function(guy) {
