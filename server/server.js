@@ -18,18 +18,18 @@ db.authenticate()
 .then(function(){
   console.log('connected to db');
 
-  // User.findOne({
-  //   where: {
-  //     fbid: '10105564501516258'
-  //   }
-  // })
-  // .then(function(guy) {
-  //   User.create({fbid: '10154660869289363', fbname: 'Jordan Taylor', avatar: 'https://scontent.fsnc1-1.fna.fbcdn.net/v/t1.0-1/p320x320/13592162_10154405816284363_2728511714196473_n.jpg?oh=b76da1d3155fb55208c9bafddfbb4ac6&oe=586FBF09'})
-  //   .then(function(jordan) {
-  //     guy.addFriend(jordan);
-  //     console.log('jordan is now your friend');
-  //   })
-  // })
+  User.findOne({
+    where: {
+      fbname: '12345'
+    }
+  })
+  .then(function(guy) {
+    // User.create({fbid:'TESTINGMULTIDBagain', fbname:'12345'})
+    // .then(function(user){
+    //   console.log(user);
+    // })
+    console.log(guy);
+  })
   // HOW TO GET ALL THE LIKES OF A PARTICULAR LINK!
   // Link.findOne({
   //   where: {
@@ -92,29 +92,29 @@ as well as to add relational sequelize methods to it's model instances!
 A few intances will be created every time to test the database */
     // COMMENT THIS OUT LATER
 
-      db.sync({force: true})
-        .then(function(){
-          console.log('sycn success!');
-          User.create({fbid: '928374', fbname: 'Michael Wong'})
-            .then(function(user){
-              User.create({fbid: 'ast294r', fbname:'Squirrel'})
-              .then(function(user2){
-                user.addFriend(user2);
-                // Link.create({url:"www.test.com", owner:user.fbid, assignee:user2.fbid})
-                // .then(function(link){
-                //   console.log('link saved!');
-                //   Like.create({like: true})
-                //   .then(function(like){
-                //     console.log('like instance created');
-                //   })
-                // })
-              })  
-              console.log('users saved');
-            })
-        })
-        .catch(function(err){
-          console.log(err, 'could not sync');
-        }); // <=== force sync to refresh
+      // db.sync({force: true})
+      //   .then(function(){
+      //     console.log('sycn success!');
+      //     User.create({fbid: '928374', fbname: 'Michael Wong'})
+      //       .then(function(user){
+      //         User.create({fbid: 'ast294r', fbname:'Squirrel'})
+      //         .then(function(user2){
+      //           user.addFriend(user2);
+      //           // Link.create({url:"www.test.com", owner:user.fbid, assignee:user2.fbid})
+      //           // .then(function(link){
+      //           //   console.log('link saved!');
+      //           //   Like.create({like: true})
+      //           //   .then(function(like){
+      //           //     console.log('like instance created');
+      //           //   })
+      //           // })
+      //         })  
+      //         console.log('users saved');
+      //       })
+      //   })
+      //   .catch(function(err){
+      //     console.log(err, 'could not sync');
+      //   }); // <=== force sync to refresh
 
 //connect middleware
 app.use(cors());
