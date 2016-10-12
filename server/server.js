@@ -28,7 +28,7 @@ db.authenticate()
     // .then(function(user){
     //   console.log(user);
     // })
-    console.log(guy);
+   console.log(guy);
   })
   // HOW TO GET ALL THE LIKES OF A PARTICULAR LINK!
   // Link.findOne({

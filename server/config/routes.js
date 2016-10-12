@@ -1,7 +1,7 @@
 var helpers = require('./helpers');
 
-module.exports = function(app){
 
+module.exports = function(app){
   app.use(require('./redirectconfig.js'));
 
   app.get('/test/:first', helpers.test);
