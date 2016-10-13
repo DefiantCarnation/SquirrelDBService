@@ -104,6 +104,7 @@ module.exports = {
   },
   // user request API // 
   getLinks: function(req, res, next){
+    console.log('GOT LINKS')
     const userID = req.params.userid;
     const promises = [];
 
