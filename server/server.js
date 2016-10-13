@@ -22,14 +22,19 @@ global.currentdb.DB.authenticate()
 
   global.User.findOne({
     where: {
-      fbname: 'FAKEPASSWORDSMSPVD'
+      fbname: 'ULTRAFAKE'
     }
   })
   .then(function(guy) {
-    // global.User.create({fbid:'TESTINGMULTIDBagain', fbname:'12345'})
-    // .then(function(user){
-    //   console.log(user);
-    // })
+    
+    global.Link.findOne({
+      where: {
+        owner:'JAKE'
+      }
+    }).then(function(link){
+      console.log('LINK',link);
+    })
+
    console.log(guy);
   })
   // HOW TO GET ALL THE LIKES OF A PARTICULAR LINK!
@@ -127,7 +132,7 @@ app.use(bodyParser.json());
 routes(app);
 
 //set env variables 
-var port = process.env.PORT || 8889;
+var port = process.env.PORT || 8888;
 
 app.listen(port, function(){
   console.log('app listening on port ' + port);
