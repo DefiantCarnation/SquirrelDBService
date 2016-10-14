@@ -17,9 +17,9 @@ global.Tag = global.currentdb.Tag;
 module.exports = {
   // test route for Postman and Mocha TDD
   getMostRecent: function(req, res, next) {
-    console.log('testtest!>>>>>>>>>>>>>>>>>>>>>>>>>');
     // console.log('testtest!>>>>>>>>>>>>>>>>>>>>>>>>>');
-    Link.findAll({limit: 20, order: 'createdAt DESC'})
+
+    global.Link.findAll({limit: 60, order: 'createdAt DESC'})
       .then(function(data) {
         console.log('give me redis data!');
         res.send(data);
@@ -115,6 +115,7 @@ module.exports = {
   },
   // user request API // 
   getLinks: function(req, res, next){
+
     const userID = req.params.userid;
     const promises = [];
 
